@@ -1,0 +1,75 @@
+<!-- Based off https://github.com/tanay-bits/twolink/blob/master/urdf/2link_robot.urdf -->
+<robot name="2link_robot">
+	
+	<material name="black">
+		<color rgba="0 0 0 0.7"/>
+	</material>
+	<material name="white">
+		<color rgba="1 1 1 0.7"/>
+	</material>
+
+	<link name="base"/>
+
+	<link name="arm1">
+		<visual>
+			<geometry>
+				<box size="0.2 .05 .05"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.1 0 0"/>
+			<material name="black"/>
+		</visual>
+	</link>
+
+	<joint name="baseHinge" type="continuous">
+		<axis rpy="0 0 0" xyz="0 0 1"/>
+		<parent link="base"/>
+		<child link="arm1"/>
+	</joint>
+
+	<link name="arm2">
+		<visual>
+			<geometry>
+				<box size="0.2 .05 .05"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.1 0 0"/>
+			<material name="white"/>
+		</visual>
+	</link>
+
+	<joint name="interArm" type="continuous">
+		<axis rpy="0 0 0" xyz="0 0 1"/>
+		<parent link="arm1"/>
+		<child link="arm2"/>
+		<origin rpy="0 0 0" xyz="0.2 0 0"/>
+	</joint>
+
+	<link name="endEffector"/>
+
+	<joint name="ee_joint" type="fixed">
+		<parent link="arm2"/>
+		<child link="endEffector"/>
+		<origin rpy="0 0 0" xyz="0.2 0 0"/>
+	</joint>
+
+    <transmission name="baseHinge">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="baseHinge">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="baseHinge">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name="interArm">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="interArm">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="interArm">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+</robot>
