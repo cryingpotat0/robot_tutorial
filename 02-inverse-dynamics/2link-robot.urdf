@@ -9,46 +9,78 @@
 	</material>
 
 	<link name="base"/>
-
 	<link name="arm1">
 		<visual>
 			<geometry>
 				<box size="0.2 .05 .05"/>
 			</geometry>
-			<origin rpy="0 0 0" xyz="0.1 0 0"/>
+			<origin rpy="0 0 0" xyz="0.1 0 0.05"/>
 			<material name="black"/>
 		</visual>
+        <inertial>
+          <mass value="1"/>
+          <origin rpy="0 0 0" xyz="0.2 0 0.05"/>
+          <inertia ixx="0" ixy="-0.0" ixz="-0.0" iyy="3e-03" iyz="0" izz="3e-03"/>
+        </inertial>
+        <collision>
+			<geometry>
+				<box size="0.2 .05 .05"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.1 0 0.05"/>
+        </collision>
 	</link>
 
 	<joint name="baseHinge" type="continuous">
-		<axis rpy="0 0 0" xyz="0 0 1"/>
+		<axis rpy="0 0 0" xyz="0 0 0.1"/>
 		<parent link="base"/>
 		<child link="arm1"/>
 	</joint>
 
 	<link name="arm2">
+
+        <inertial>
+          <mass value="1"/>
+          <origin rpy="0 0 0" xyz="0.1 0 0.05"/>
+          <inertia ixx="0" ixy="-0.0" ixz="-0.0" iyy="3e-03" iyz="0" izz="3e-03"/>
+        </inertial>
 		<visual>
 			<geometry>
 				<box size="0.2 .05 .05"/>
 			</geometry>
-			<origin rpy="0 0 0" xyz="0.1 0 0"/>
+			<origin rpy="0 0 0" xyz="0.1 0 0.05"/>
 			<material name="white"/>
 		</visual>
+        <collision>
+			<geometry>
+				<box size="0.2 .05 .05"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.1 0 0.05"/>
+        </collision>
 	</link>
 
 	<joint name="interArm" type="continuous">
 		<axis rpy="0 0 0" xyz="0 0 1"/>
 		<parent link="arm1"/>
 		<child link="arm2"/>
-		<origin rpy="0 0 0" xyz="0.2 0 0"/>
+		<origin rpy="0 0 0" xyz="0.2 0 0.0"/>
 	</joint>
+    <transmission name="interArm">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="interArm">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="interArm">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
 
 	<link name="endEffector"/>
 
 	<joint name="ee_joint" type="fixed">
 		<parent link="arm2"/>
 		<child link="endEffector"/>
-		<origin rpy="0 0 0" xyz="0.2 0 0"/>
+		<origin rpy="0 0 0" xyz="0.1 0 0.0"/>
 	</joint>
 
     <transmission name="baseHinge">
@@ -57,16 +89,6 @@
         <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       </joint>
       <actuator name="baseHinge">
-        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-    <transmission name="interArm">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="interArm">
-        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="interArm">
         <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
