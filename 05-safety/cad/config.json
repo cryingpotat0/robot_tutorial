@@ -1,0 +1,11 @@
+{
+    "documentId": "5f8872aa02aea16324f73fd6",
+    "outputFormat": "urdf",
+    "assemblyName": "robot_arm-working-drake-corrected-joints",
+    "dynamics": {
+        "link_0": "fixed"
+    },
+    "postImportCommands": [
+        "/usr/bin/python3 ./post_process.py"
+    ]
+}

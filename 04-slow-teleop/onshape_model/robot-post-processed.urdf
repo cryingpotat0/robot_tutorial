@@ -1,0 +1,285 @@
+<robot name="onshape">
+<link name="link_0">
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_0_visual.stl.obj"/>
+</geometry>
+<material name="link_0_material">
+<color rgba="0.63665302665838641172 0.70665941485366734476 0.7486410347752990857 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_0_collision.stl.obj"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.0002170000711473660368 0.019977290011372328404 0.014452172077149435386" rpy="0 0 0"/>
+<mass value="0.067339625552740117742" />
+<inertia ixx="3.941264799089049339e-05" ixy="-1.6917449775115988822e-07"  ixz="-8.2527675233795964681e-08" iyy="3.7402608757763990989e-05" iyz="-8.3063233605931860936e-06" izz="5.78807016091496655e-05" />
+</inertial>
+</link>
+
+<link name="link_1">
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_1_visual.stl.obj"/>
+</geometry>
+<material name="link_1_material">
+<color rgba="0.64357367744002347276 0.67196653493802172008 0.68897270443374003523 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_1_collision.stl.obj"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.00027918942835227823513 0.013518930502538108532 -0.014333557674623310582" rpy="0 0 0"/>
+<mass value="0.050628351527588218162" />
+<inertia ixx="1.3932921729227902246e-05" ixy="2.8557435222540726593e-07"  ixz="2.5643914428734081027e-08" iyy="9.0662281000104705822e-06" iyz="2.5837193336876736175e-08" izz="1.5235657841610895772e-05" />
+</inertial>
+</link>
+
+<link name="link_2">
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_2_visual.stl.obj"/>
+</geometry>
+<material name="link_2_material">
+<color rgba="0.58792484912110187789 0.50609405877511137728 0.41159042334207635028 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_2_collision.stl.obj"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.071283098252509266568 -0.0013135243902327839623 0.018811683084683613471" rpy="0 0 0"/>
+<mass value="0.052007423221977003291" />
+<inertia ixx="1.1177959999252728177e-05" ixy="-4.8004079018480438733e-06"  ixz="3.5548931072641587973e-07" iyy="7.0887891266095947327e-05" iyz="8.9867531843671854832e-08" izz="6.8897838293509018831e-05" />
+</inertial>
+</link>
+
+<link name="link_3">
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_3_visual.stl.obj"/>
+</geometry>
+<material name="link_3_material">
+<color rgba="0.68604539258273533608 0.61337919756263037385 0.52945944592085392166 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_3_collision.stl.obj"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.049413862807944727851 0.010180605518645446592 0.014664407029777927483" rpy="0 0 0"/>
+<mass value="0.058566552782009964617" />
+<inertia ixx="9.6070135249591487911e-06" ixy="8.7696058910853946322e-06"  ixz="3.0995042730179175755e-07" iyy="4.0150639964357074676e-05" iyz="-8.5155620319453072547e-08" izz="3.985962344572768659e-05" />
+</inertial>
+</link>
+
+<link name="link_4">
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_4_visual.stl.obj"/>
+</geometry>
+<material name="link_4_material">
+<color rgba="0.83009099236082828366 0.55655568880197547887 0.14681637764283955727 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_4_collision.stl.obj"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-1.3727471155264040012e-07 0.025986966516014262801 0.009948523298501895859" rpy="0 0 0"/>
+<mass value="0.02014488674758842246" />
+<inertia ixx="4.9962562494593128586e-06" ixy="1.6489902847691343952e-10"  ixz="1.6351694841722407034e-09" iyy="3.1984411029233471939e-06" iyz="3.2861766806548729181e-07" izz="3.0162414861342805093e-06" />
+</inertial>
+</link>
+
+<link name="link_5">
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_5_visual.stl.obj"/>
+</geometry>
+<material name="link_5_material">
+<color rgba="0.65195160443812616435 0.5118316327105492114 0.35001177652876269697 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/link_5_collision.stl.obj"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.0054703320364746571211 0.00035379515409716098557 -0.019051616122921104235" rpy="0 0 0"/>
+<mass value="0.03037260494447570694" />
+<inertia ixx="9.1569420585346355943e-06" ixy="-8.182000055192678831e-08"  ixz="-2.38054067845912307e-06" iyy="1.1172203698047952249e-05" iyz="-9.9473275643227633544e-08" izz="5.7316274667953010443e-06" />
+</inertial>
+</link>
+
+<link name="moving_side">
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/moving_side_visual.stl.obj"/>
+</geometry>
+<material name="moving_side_material">
+<color rgba="0.98039215686274505668 0.71372549019607844922 0.0039215686274509803377 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/moving_side_collision.stl.obj"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.001343566454291770032 0.025135301999220375363 0.014439844386180466368" rpy="0 0 0"/>
+<mass value="0.013481537390803313356" />
+<inertia ixx="3.6022701795934826771e-06" ixy="3.2629783186034255829e-07"  ixz="-3.9974318379365250106e-09" iyy="1.5882880782810282268e-06" iyz="3.564811928703464134e-08" izz="2.5627106954324395253e-06" />
+</inertial>
+</link>
+
+<joint name="revolute_6" type="revolute">
+<origin xyz="0.0075615962172858536619 -0.01409696982055897059 -0.01299999999999992828" rpy="-1.5707963267948950037 -1.5707963267948930053 0" />
+<parent link="link_5" />
+<child link="moving_side" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="revolute_5" type="revolute">
+<origin xyz="-1.3290960555379163766e-05 0.044938012661920351265 0.016103323324962517948" rpy="-1.570796326794896558 1.896537658886143757e-13 -3.1415926535897900074" />
+<parent link="link_4" />
+<child link="link_5" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="revolute_4" type="revolute">
+<origin xyz="-0.088061251076824720307 0.020691030053721082282 0.029249999999996730005" rpy="-3.141592653589793116 1.5278759838804488387e-13 2.8797932657906541998" />
+<parent link="link_3" />
+<child link="link_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="revolute_3" type="revolute">
+<origin xyz="0.10829999999999978533 0.014800000000000070044 0.03325000000000029321" rpy="3.1415926535897922278 -1.1294083865207919279e-14 -1.5707963267949169861" />
+<parent link="link_2" />
+<child link="link_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-2.356194490192344837" upper="2.356194490192344837"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="revolute_2" type="revolute">
+<origin xyz="0.018341325102363380262 0.0015766639709810931214 -0.016150000000000122591" rpy="1.5707963267948961139 -1.9984014443252687566e-15 -1.570796326794896558" />
+<parent link="link_1" />
+<child link="link_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-2.356194490192344837" upper="2.356194490192344837"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="revolute_1" type="revolute">
+<origin xyz="-6.2657287344280429347e-05 0.041609087822019434622 0.039082062936782756279" rpy="-3.141592653589793116 6.1232339957380195852e-17 4.6275380072115051413e-31" />
+<parent link="link_0" />
+<child link="link_1" />
+<axis xyz="0 0 -1"/>
+<limit effort="1" velocity="20" lower="-1.0471975511965976313" upper="1.0471975511965976313"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+
+
+
+    <transmission name="revolute_1_tran">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="revolute_1">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="revolute_1_actr">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="revolute_2_tran">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="revolute_2">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="revolute_2_actr">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="revolute_3_tran">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="revolute_3">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="revolute_3_actr">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="revolute_4_tran">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="revolute_4">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="revolute_4_actr">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="revolute_5_tran">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="revolute_5">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="revolute_5_actr">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="revolute_6_tran">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="revolute_6">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="revolute_6_actr">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+</robot>

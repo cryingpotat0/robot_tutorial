@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "5f8872aa02aea16324f73fd6",
+    "documentMicroversion": "f4bc37c67c9302cfc51a1a97",
+    "elementId": "9e921b334117b38ec68fa9bb",
+    "fullConfiguration": "default",
+    "id": "IvqBrJ41qaR9Nj5ZS",
+    "isStandardContent": false,
+    "name": "DC15_A01_HORN_IDLE2_DUMMY <1>",
+    "partId": "JFX",
+    "suppressed": false,
+    "type": "Part"
+}
