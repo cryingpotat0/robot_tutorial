@@ -15,7 +15,7 @@ class MotorControlType(Enum):
 
 
 class Robot:
-    def __init__(self, dynamixel: Dynamixel, servo_ids=[0, 1, 2, 3, 4, 5]):
+    def __init__(self, dynamixel: Dynamixel, servo_ids=[9, 1, 2, 3, 4, 5]):
         self.servo_ids = servo_ids
         self.dynamixel = dynamixel
         # Manually tuned.
