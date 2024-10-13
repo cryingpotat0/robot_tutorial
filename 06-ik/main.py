@@ -298,16 +298,23 @@ def ik_example(meshcat, real_robot, show_diagram):
     
     if show_diagram:
         RenderDiagram(diagram, max_depth=1)
-        maybe_sleep()
+        wait_for_confirmation()
 
     logger.info("Built diagram")
     simulator = Simulator(diagram)
     context = simulator.get_mutable_context()
+
+
+    plant_context = plant.GetMyContextFromRoot(context)
+
+    plant.SetPositions(
+        plant_context,
+        [0, -np.pi / 2, 0, 0, 0, 0],
+    )
+
     integrator.set_integral_value(
         integrator.GetMyContextFromRoot(context),
-        plant.GetPositions(
-            plant.GetMyContextFromRoot(context),
-            plant.GetModelInstanceByName("onshape"),
+        plant.GetPositions(plant_context, plant.GetModelInstanceByName("onshape"),
         ),
     )
 
@@ -316,11 +323,11 @@ def ik_example(meshcat, real_robot, show_diagram):
     logger.info("Starting simulation")
     simulator.set_target_realtime_rate(1.0)
     meshcat.StartRecording()
-    total_time = 1
+    total_time = 2
     simulator.AdvanceTo(total_time)
     meshcat.PublishRecording()
 
-    maybe_sleep()
+    wait_for_confirmation()
 
 
 @click.command("run_ik")
@@ -346,8 +353,8 @@ def gripper_frame_viz():
             "file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/robot-gripper.urdf"
             )[0]
         # TODO: the frames are in a weird position relative to each other, why does this happen?
-        plant.WeldFrames(plant.GetFrameByName("link_5", g), plant.GetFrameByName("moving_side", g))
-        plant.WeldFrames(plant.world_frame(), plant.GetFrameByName("link_5", g), pose.pos)
+        # plant.WeldFrames(plant.GetFrameByName("link_5", g), plant.GetFrameByName("moving_side", g))
+        plant.WeldFrames(plant.world_frame(), plant.GetFrameByName("moving_side", g), pose.pos)
 
     plant.Finalize()
     meshcat.Delete()
@@ -356,6 +363,40 @@ def gripper_frame_viz():
     diagram = builder.Build()
     context = diagram.CreateDefaultContext()
     diagram.ForcedPublish(context)
+
+    wait_for_confirmation()
+
+@click.command("initial_cond_viz")
+def initial_cond_viz():
+    meshcat = Meshcat(port=7002)
+
+    builder = DiagramBuilder()
+    (robot_diagram, plant) = build_sim_robot(meshcat)
+    builder.AddSystem(robot_diagram)
+
+    diagram = builder.Build()
+    context = diagram.CreateDefaultContext()
+    plant_context = plant.GetMyContextFromRoot(context)
+
+    for position in [
+            np.zeros(6),
+            [0, -np.pi / 2, 0, 0, 0, 0],
+            [np.pi / 6, -np.pi / 3, np.pi / 6, -np.pi / 6, 0, 0]
+            ]:
+
+        logger.info(f"Setting position to {position}")
+        plant.SetPositions(
+                plant_context,
+                position,
+            )
+        diagram.ForcedPublish(context)
+        plant_pose = plant.get_body_poses_output_port().Eval(plant_context)
+        gripper_pose = plant_pose[7]
+
+        logger.info(f"EE pos: {gripper_pose.translation()}")
+        logger.info(f"EE rot: {gripper_pose.rotation()}")
+        wait_for_confirmation()
+
 
 
 @click.command("gripper_traj_viz")
@@ -382,12 +423,12 @@ def gripper_traj_viz():
     meshcat.ResetRenderMode()
     meshcat.SetLine("p_G", p_G, 2.0, rgba=Rgba(1, 0.65, 0))
 
-    maybe_sleep()
+    wait_for_confirmation()
 
 
-def maybe_sleep():
+def wait_for_confirmation(text="Press any key to continue"):
     try:
-        sleep(100)
+        input(text)
     except KeyboardInterrupt:
         return
 

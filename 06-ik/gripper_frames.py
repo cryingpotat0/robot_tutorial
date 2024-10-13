@@ -12,18 +12,31 @@ Waypoints = list[tuple[str, GripperFrame]]
 
 
 def make_gripper_frames() -> Waypoints:
+    # Get these by running initial_cond_viz until you have reasonable points.
     return [
             ("start", GripperFrame(
                     RigidTransform(
-                        RotationMatrix.MakeXRotation(0),
-                        [ 0.01227231,  0.07128447, 0.06267743]
+                        RotationMatrix(
+                            [
+                             [3.528098644890758e-14, -1.4645942698561294e-13, -1.0],
+                             [0.23832541480209682, 0.9711853564893822, -1.3383089507819007e-13],
+                             [0.9711853564893822, -0.23832541480209682, 6.916938108970298e-14], 
+                            ],
+                        ),
+                        [0.01227231, 0.13794192, 0.08648411]
                     ),
                     0.0
                 )),
             ("end", GripperFrame(
                     RigidTransform(
-                        RotationMatrix.MakeXRotation(0),
-                        [0.06299721,  0.20357181, 0.08171054]
+                        RotationMatrix(
+                            [
+                                [-0.13959840732927445, 0.4801169489520393, -0.866025403784505],
+                                [-0.24179153415007085, 0.8315869491601404, 0.4999999999998852],
+                                [0.9602338979042996, 0.2791968146586111, -1.0937239345091733e-15],
+                            ],
+                        ),
+                        [0.09970705, 0.18974534, 0.06858289]
                     ),
                     1.0
                 )
