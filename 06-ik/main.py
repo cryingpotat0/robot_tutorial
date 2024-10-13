@@ -1,3 +1,6 @@
+from time import sleep
+import numpy as np
+from matplotlib import pyplot as plt
 from pydrake.all import (
     AddMultibodyPlantSceneGraph,
     BasicVector,
@@ -8,12 +11,14 @@ from pydrake.all import (
     JacobianWrtVariable,
     MeshcatVisualizer,
     Parser,
+    Rgba,
     Simulator,
     InverseDynamicsController,
     LeafSystem,
     JointSliders,
     Meshcat,
     FirstOrderLowPassFilter,
+    TrajectorySource,
     VectorLogSink
 )
 import numpy as np
@@ -25,6 +30,7 @@ from utils import TruncateVec, ZeroExtendVec
 import logging
 from pinv import PseudoInverseController
 from utils import RenderDiagram
+from gripper_frames import make_gripper_frames, make_gripper_trajectory
 
 logger = logging.getLogger("robot")
 logging.basicConfig(level=logging.INFO)
@@ -261,55 +267,130 @@ def build_real_robot(meshcat):
     
 
 
-def ik_example(meshcat, real_robot):
+def ik_example(meshcat, real_robot, show_diagram):
     if real_robot:
         (robot_diagram, plant) = build_real_robot(meshcat)
     else:
         (robot_diagram, plant) = build_sim_robot(meshcat)
+
     
     builder = DiagramBuilder()
-    # teleop = builder.AddSystem(JointSliders(meshcat=meshcat, plant=plant))
-
     builder.AddSystem(robot_diagram)
 
-    # connect jacobian controller
+    waypoints = make_gripper_frames()
+
+    logger.info("Making gripper trajectory")
+    traj = make_gripper_trajectory(waypoints).MakeDerivative()
+    V_G_source = builder.AddSystem(TrajectorySource(traj))
+    V_G_source.set_name("v_WG")
+    logger.info("Made gripper trajectory")
+
     pinv_controller = builder.AddSystem(PseudoInverseController(plant))
     integrator = builder.AddSystem(Integrator(6))
-    # velocity = builder.AddSystem(ConstantValueSource(BasicVector([
-    #             0,  # rotation about x
-    #             0,  # rotation about y
-    #             0,  # rotation about z
-    #             0.3,  # x
-    #             0,  # y
-    #             0.3, # z
-    #         ])))
-    # builder.Connect(velocity.get_output_port(), pinv_controller.get_input_port("desired_ee_velocity"))
 
-    builder.Connect(robot_diagram.get_output_port(0), pinv_controller.get_input_port(0))
-
-    builder.Connect(pinv_controller.get_output_port(), integrator.get_input_port())
-    builder.Connect(integrator.get_output_port(), robot_diagram.get_input_port(0))
-
-
-    # you need a sink for teh sim to do anything SMFH.
-    # log_sink = builder.AddSystem(VectorLogSink(6))
-    # builder.Connect(robot_diagram.get_output_port(0), log_sink.get_input_port())
+    # connect
+    builder.Connect(V_G_source.get_output_port(), pinv_controller.GetInputPort("desired_ee_velocity"))
+    builder.Connect(robot_diagram.GetOutputPort("measured_position"), pinv_controller.GetInputPort("measured_position"))
+    builder.Connect(pinv_controller.GetOutputPort("desired_velocity"), integrator.get_input_port())
+    builder.Connect(integrator.get_output_port(), robot_diagram.GetInputPort("desired_position"))
 
     diagram = builder.Build()
     
-    RenderDiagram(diagram, max_depth=1)
+    if show_diagram:
+        RenderDiagram(diagram, max_depth=1)
+        maybe_sleep()
+
     logger.info("Built diagram")
     simulator = Simulator(diagram)
+    context = simulator.get_mutable_context()
+    integrator.set_integral_value(
+        integrator.GetMyContextFromRoot(context),
+        plant.GetPositions(
+            plant.GetMyContextFromRoot(context),
+            plant.GetModelInstanceByName("onshape"),
+        ),
+    )
+
+    # move the plant to the initial position?? uhhh how...
+    
     logger.info("Starting simulation")
     simulator.set_target_realtime_rate(1.0)
-    simulator.AdvanceTo(1)
+    meshcat.StartRecording()
+    total_time = 1
+    simulator.AdvanceTo(total_time)
+    meshcat.PublishRecording()
+
+    maybe_sleep()
 
 
-@click.command()
+@click.command("run_ik")
 @click.option("--real-robot", is_flag=True)
-def run_robot(real_robot):
+@click.option("--show-diagram", is_flag=True)
+def run_robot(real_robot, show_diagram):
     meshcat = Meshcat(port=7002)
-    ik_example(meshcat, real_robot=real_robot)
+    ik_example(meshcat, real_robot=real_robot, show_diagram=show_diagram)
+
+@click.command("gripper_frame_viz")
+def gripper_frame_viz():
+    meshcat = Meshcat(port=7002)
+
+    builder = DiagramBuilder()
+    plant, scene_graph = AddMultibodyPlantSceneGraph(builder, time_step=1e-2)
+    parser = Parser(plant, scene_graph)
+    parser.SetAutoRenaming(True)
+
+    gripper_frames = make_gripper_frames()
+
+    for (key, pose) in gripper_frames:
+        g = parser.AddModelsFromUrl(
+            "file:///Users/raghav/Documents/projects/robot_arm/onshape-to-robot-examples/low-cost-robot/robot-gripper.urdf"
+            )[0]
+        # TODO: the frames are in a weird position relative to each other, why does this happen?
+        plant.WeldFrames(plant.GetFrameByName("link_5", g), plant.GetFrameByName("moving_side", g))
+        plant.WeldFrames(plant.world_frame(), plant.GetFrameByName("link_5", g), pose.pos)
+
+    plant.Finalize()
+    meshcat.Delete()
+    MeshcatVisualizer.AddToBuilder(builder, scene_graph, meshcat)
+
+    diagram = builder.Build()
+    context = diagram.CreateDefaultContext()
+    diagram.ForcedPublish(context)
+
+
+@click.command("gripper_traj_viz")
+def gripper_traj_viz():
+    meshcat = Meshcat(port=7002)
+
+    waypoints = make_gripper_frames()
+    traj = make_gripper_trajectory(waypoints)
+    traj_p_G = traj.get_position_trajectory()
+    p_G = traj_p_G.vector_values(traj_p_G.get_segment_times())
+    plt.plot(traj_p_G.get_segment_times(), p_G.T)
+    plt.legend(["x", "y", "z"])
+    plt.title("p_G")
+    plt.show()
+
+
+    traj_R_G = traj.get_orientation_trajectory()
+    R_G = traj_R_G.vector_values(traj_R_G.get_segment_times())
+    plt.plot(traj_R_G.get_segment_times(), R_G.T)
+    plt.legend(["qx", "qy", "qz", "qw"])
+    plt.title("R_G")
+    plt.show()
+
+    meshcat.ResetRenderMode()
+    meshcat.SetLine("p_G", p_G, 2.0, rgba=Rgba(1, 0.65, 0))
+
+    maybe_sleep()
+
+
+def maybe_sleep():
+    try:
+        sleep(100)
+    except KeyboardInterrupt:
+        return
+
 
 if __name__ == "__main__":
     run_robot()
