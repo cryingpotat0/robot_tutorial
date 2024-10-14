@@ -35,6 +35,10 @@ from gripper_frames import make_gripper_frames, make_gripper_trajectory
 logger = logging.getLogger("robot")
 logging.basicConfig(level=logging.INFO)
 
+@click.group()
+def cli():
+    pass
+
 class PrintJacobian(LeafSystem):
     def __init__(self, plant, frame):
         LeafSystem.__init__(self)
@@ -330,14 +334,14 @@ def ik_example(meshcat, real_robot, show_diagram):
     wait_for_confirmation()
 
 
-@click.command("run_ik")
+@cli.command("run_ik")
 @click.option("--real-robot", is_flag=True)
 @click.option("--show-diagram", is_flag=True)
 def run_robot(real_robot, show_diagram):
     meshcat = Meshcat(port=7002)
     ik_example(meshcat, real_robot=real_robot, show_diagram=show_diagram)
 
-@click.command("gripper_frame_viz")
+@cli.command("gripper_frame_viz")
 def gripper_frame_viz():
     meshcat = Meshcat(port=7002)
 
@@ -366,7 +370,7 @@ def gripper_frame_viz():
 
     wait_for_confirmation()
 
-@click.command("initial_cond_viz")
+@cli.command("initial_cond_viz")
 def initial_cond_viz():
     meshcat = Meshcat(port=7002)
 
@@ -399,7 +403,7 @@ def initial_cond_viz():
 
 
 
-@click.command("gripper_traj_viz")
+@cli.command("gripper_traj_viz")
 def gripper_traj_viz():
     meshcat = Meshcat(port=7002)
 
@@ -434,4 +438,4 @@ def wait_for_confirmation(text="Press any key to continue"):
 
 
 if __name__ == "__main__":
-    run_robot()
+    cli()
