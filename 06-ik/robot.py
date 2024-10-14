@@ -1,10 +1,13 @@
+import threading
 import numpy as np
 import atexit
+import logging
 from dynamixel import Dynamixel, OperatingMode, ReadAttribute
 import time
 from dynamixel_sdk import GroupSyncRead, GroupSyncWrite, DXL_LOBYTE, DXL_HIBYTE, DXL_LOWORD, DXL_HIWORD
 from enum import Enum, auto
 from typing import Union
+from queue import PriorityQueue
 
 
 class MotorControlType(Enum):
@@ -13,6 +16,7 @@ class MotorControlType(Enum):
     DISABLED = auto()
     UNKNOWN = auto()
 
+logger = logging.getLogger(__name__)
 
 class Robot:
     def __init__(self, dynamixel: Dynamixel, servo_ids=[0, 1, 2, 3, 4, 5]):
@@ -61,6 +65,13 @@ class Robot:
         self.velocity_limits = [20, 20, 20, 20, 20, 20]
         self.acceleration_limits = [10, 10, 10, 10, 10, 10]
 
+        # only 5 commands in the queue
+        self._position_queue = PriorityQueue(maxsize=5)
+        self._action_count = 0
+
+        self._position_thread = threading.Thread(target=self._process_position_queue)
+        self._position_thread.start()
+
     def read_position(self, tries=2):
         """
         Reads the joint positions of the robot. 2048 is the center position. 0 and 4096 are 180 degrees in each direction.
@@ -72,7 +83,7 @@ class Robot:
             if tries > 0:
                 return self.read_position(tries=tries - 1)
             else:
-                print(f'failed to read position!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                logger.error(f'failed to read position!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         positions = []
         for id in self.servo_ids:
             position = self.position_reader.getData(id, ReadAttribute.POSITION.value, 4)
@@ -94,6 +105,20 @@ class Robot:
                 velocity -= 2 ** 32
             velocties.append(velocity)
         return velocties
+
+    def _process_position_queue(self):
+        while True:
+            # ideally debounce in a smarter way? 
+            # what's the best way to debounce?
+            # ideally the min/max joint limits would be encoded into this.
+            # 
+            (count, action) = self._position_queue.get()
+            logger.info(f'processing action {action} priority {count}')
+            self.set_goal_pos(action)
+
+    def queue_goal_pos(self, action):
+        self._action_count += 1
+        self._position_queue.put((self._action_count, action))
 
     def set_goal_pos(self, action):
         """
@@ -187,6 +212,7 @@ class Robot:
         while not np.all(np.isclose(self.read_position(), self.shutdown_pos, atol=50)):
             time.sleep(0.1)
         self._disable_torque()
+        # TODO: stop position thread
         time.sleep(0.5)
         self.dynamixel.disconnect()
 

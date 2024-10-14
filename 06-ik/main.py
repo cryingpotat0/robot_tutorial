@@ -131,9 +131,10 @@ class LowCostRobot(LeafSystem):
         if not pos:
             raise Exception("Could not connect to bot")
 
-        # Slowly move the robot to the home position
-        self._home_position = [2048, 1024, 2048, 1709, 2067, 2367]
         self._num_movable_joints = num_movable_joints
+
+        # Slowly move the robot to the home position
+        self._home_position = [2048, 1024, 2048, 2048, 2048, 2367]
         self._robot.set_goal_pos(self._home_position)
 
         self.DeclareVectorInputPort("desired_position", 6) # type: ignore
@@ -164,35 +165,34 @@ class LowCostRobot(LeafSystem):
         # import ipdb; ipdb.set_trace()
         should_move = False
         joint_safety_diffs = [
-            # (max_diff, min_diff)
+        #     # (max_diff, min_diff)
             (300, 25),
             (300, 25),
             (400, 100), # this motor is a bit sticky, so require a greater min
             (300, 25),
             (300, 25),
-            (300, 25),
+            (500, 25),
         ]
         for i in range(self._num_movable_joints):
             abs_diff = abs(measured_position[i] - desired_position[i])
             max_diff, min_diff = joint_safety_diffs[i]
-            if abs_diff > max_diff:
-                print("Desired position too far from current position, skipping")
-                print(f"Current pos {measured_position}, desired pos as float {desired_position_float}, desired_position {desired_position}")
-                outputs.SetFromVector(current_pos) # type: ignore
-                return
+            # if abs_diff > max_diff:
+            #     logger.warning(f"Desired position too far from current position for joint {i}, abs_diff={abs_diff}, max_diff={max_diff}")
+            #     logger.warning(f"Current pos {measured_position}, desired pos as float {desired_position_float}, desired_position {desired_position}")
+            #     outputs.SetFromVector(current_pos) # type: ignore
+            #     return
                 
-            elif abs_diff > min_diff:
+            if abs_diff > min_diff:
                 # only command a new position if there is somewhere new to move to
                 should_move = True
 
         if should_move:
-            print(f"Current pos {measured_position}, desired pos as float {desired_position_float}, desired_position {desired_position}")
+            logger.info(f"Current pos {measured_position}, desired pos as float {desired_position_float}, desired_position {desired_position}")
             # you can't reuse the measured position list for the rest of the joints because it's an unstable system and will droop!!
             commanded_position = list(desired_position[:self._num_movable_joints]) + list(self._home_position[self._num_movable_joints:])
-            print(commanded_position)
             # TODO: put this in a queue that the robot can read so that the main sim thread is not blocked.
-            self._robot.set_goal_pos(commanded_position) # gripper is always open for now.
-        outputs.SetFromVector(np.array(self._get_measured_pos_as_angles())) # type: ignore
+            self._robot.queue_goal_pos(commanded_position) # gripper is always open for now.
+        outputs.SetFromVector(current_pos) # type: ignore
 
 
     def _get_measured_pos_as_angles(self):
@@ -304,12 +304,12 @@ def ik_example(meshcat, real_robot, show_diagram):
     simulator = Simulator(diagram)
     context = simulator.get_mutable_context()
 
-
     plant_context = plant.GetMyContextFromRoot(context)
+
 
     plant.SetPositions(
         plant_context,
-        [0, -np.pi / 2, 0, 0, 0, 0],
+        [0, -np.pi / 2, 0, 0, 0, 0], # This should roughly match the initial positions from _home_pos
     )
 
     integrator.set_integral_value(
@@ -323,7 +323,7 @@ def ik_example(meshcat, real_robot, show_diagram):
     logger.info("Starting simulation")
     simulator.set_target_realtime_rate(1.0)
     meshcat.StartRecording()
-    total_time = 2
+    total_time = 1
     simulator.AdvanceTo(total_time)
     meshcat.PublishRecording()
 
