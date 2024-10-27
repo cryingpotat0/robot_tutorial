@@ -194,7 +194,6 @@ class LowCostRobot(LeafSystem):
             logger.info(f"Current pos {measured_position}, desired pos as float {desired_position_float}, desired_position {desired_position}")
             # you can't reuse the measured position list for the rest of the joints because it's an unstable system and will droop!!
             commanded_position = list(desired_position[:self._num_movable_joints]) + list(self._home_position[self._num_movable_joints:])
-            # TODO: put this in a queue that the robot can read so that the main sim thread is not blocked.
             self._robot.queue_goal_pos(commanded_position) # gripper is always open for now.
         outputs.SetFromVector(current_pos) # type: ignore
 
