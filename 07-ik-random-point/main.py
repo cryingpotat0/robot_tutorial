@@ -145,7 +145,14 @@ class BasicVelocityPlanner(LeafSystem):
     def CalcOutput(self, context, outputs):
         desired_position: np.ndarray = self.GetInputPort("desired_ee_position").Eval(context) # type: ignore
         current_position: np.ndarray = self.GetInputPort("current_ee_position").Eval(context) # type: ignore
-        position_velocity = desired_position - current_position
+        position_diff = desired_position - current_position
+        if np.linalg.norm(position_diff) < 0.001:
+            position_velocity = np.zeros(6)
+        else:
+            velocity_magnitude = 0.1
+            position_velocity = velocity_magnitude * position_diff / np.linalg.norm(position_diff)
+
+
         angular_velocity = [0, 0, 0]
         velocity = np.concatenate([position_velocity, angular_velocity])
 
@@ -359,7 +366,7 @@ def ik_example(meshcat, real_robot, show_diagram, destination_pos=[0.09970705, 0
     logger.info("Starting simulation")
     simulator.set_target_realtime_rate(1.0)
     meshcat.StartRecording()
-    total_time = 100
+    total_time = 10
     simulator.AdvanceTo(total_time)
     meshcat.PublishRecording()
 
