@@ -149,7 +149,7 @@ class BasicVelocityPlanner(LeafSystem):
         if np.linalg.norm(position_diff) < 0.001:
             position_velocity = np.zeros(6)
         else:
-            velocity_magnitude = 0.1
+            velocity_magnitude = 0.2
             position_velocity = velocity_magnitude * position_diff / np.linalg.norm(position_diff)
 
 
@@ -306,7 +306,7 @@ def build_real_robot(meshcat):
     
 
 
-def ik_example(meshcat, real_robot, show_diagram, destination_pos=[0.09970705, 0.18974534, 0.06858289]):
+def ik_example(meshcat, real_robot, show_diagram, destination_pos=[0.52970705, 0.25974534, 0.08858289]):
     if real_robot:
         (robot_diagram, plant) = build_real_robot(meshcat)
     else:
